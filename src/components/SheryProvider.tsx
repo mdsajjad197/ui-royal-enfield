@@ -7,25 +7,39 @@ export default function SheryProvider({ children }: { children: React.ReactNode 
       const gsap = (window as any).gsap;
       const ScrollTrigger = (window as any).ScrollTrigger;
 
-      if (!Shery || !gsap || !ScrollTrigger) {
+      const THREE = (window as any).THREE;
+      
+      if (!Shery || !gsap || !ScrollTrigger || !THREE || typeof Shery.makeMagnet !== 'function') {
         return false;
       }
 
       try {
+        console.log("SheryProvider: Initializing mouseFollower and makeMagnet");
         // Register ScrollTrigger with GSAP if available
         if (gsap && ScrollTrigger) {
           gsap.registerPlugin(ScrollTrigger);
         }
 
+        // Initialize Mouse Follower
+        if (typeof Shery.mouseFollower === 'function') {
+          Shery.mouseFollower({
+            skew: true,
+            debug: false,
+          });
+        }
+
         // Initialize Magnet Effect for elements with .magnet class
-        Shery.makeMagnet(".magnet", {
-          ease: "cubic-bezier(0.23, 1, 0.320, 1)",
-          duration: 1,
-        });
+        if (typeof Shery.makeMagnet === 'function') {
+          Shery.makeMagnet(".magnet", {
+            ease: "cubic-bezier(0.23, 1, 0.320, 1)",
+            duration: 1,
+          });
+        }
         
+        console.log("SheryProvider: Initialization complete");
         return true;
       } catch (error) {
-        console.warn("Shery.js initialization failed:", error);
+        console.warn("Shery.js initialization failed in SheryProvider:", error);
         return false;
       }
     };

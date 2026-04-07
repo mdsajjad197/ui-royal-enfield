@@ -15,13 +15,18 @@ export default function Hero() {
     const initializeShery = () => {
       const Shery = (window as any).Shery;
       const THREE = (window as any).THREE;
-      if (!Shery || !THREE) return false;
+      const gsap = (window as any).gsap;
+      
+      if (!Shery || !THREE || !gsap) {
+        console.log("Waiting for Shery, THREE, and GSAP...");
+        return false;
+      }
 
       try {
+        console.log("Initializing Shery.imageEffect Style 6...");
         // Style 6 with gooey effect
         Shery.imageEffect(".images", {
           style: 6,
-          debug: true,
           gooey: true,
           config: {
             "noiseDetail": { "value": 7.44, "range": [0, 100] },
@@ -47,9 +52,11 @@ export default function Hero() {
             "shapes": { "value": ["circle", "ellipse"] }
           },
         });
+        console.log("Shery.imageEffect initialized successfully");
         return true;
       } catch (error) {
-        console.error("Shery.imageEffect error:", error);
+        console.error("Shery.imageEffect initialization error:", error);
+        // Fallback: show images if effect fails
         if (images) {
           images.forEach(img => (img as HTMLElement).style.opacity = "1");
         }

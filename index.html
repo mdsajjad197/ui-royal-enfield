@@ -4,16 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Royal Enfield - Pure Motorcycling</title>
+    <!-- Three.js - Using a version known for better compatibility with Shery.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.155.0/three.min.js"></script>
     <!-- GSAP & ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <!-- Three.js - Using a version known for better compatibility -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.155.0/three.min.js"></script>
     <!-- Shery.js -->
-    <link rel="stylesheet" href="https://unpkg.com/sheryjs/dist/Shery.css" />
-    <script src="https://unpkg.com/sheryjs/dist/Shery.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sheryjs@1.0.0-beta.0.1.7/dist/Shery.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sheryjs@1.0.0-beta.0.1.7/dist/Shery.js"></script>
     <script>
       window.addEventListener('load', () => {
+        if (window.THREE) {
+          // Polyfill for older Shery.js versions
+          if (!window.THREE.PlaneBufferGeometry) window.THREE.PlaneBufferGeometry = window.THREE.PlaneGeometry;
+          if (!window.THREE.BoxBufferGeometry) window.THREE.BoxBufferGeometry = window.THREE.BoxGeometry;
+          if (!window.THREE.CircleBufferGeometry) window.THREE.CircleBufferGeometry = window.THREE.CircleGeometry;
+          if (!window.THREE.SphereBufferGeometry) window.THREE.SphereBufferGeometry = window.THREE.SphereGeometry;
+          
+          // Math vs MathUtils
+          if (!window.THREE.Math && window.THREE.MathUtils) window.THREE.Math = window.THREE.MathUtils;
+          if (window.THREE.Math && !window.THREE.MathUtils) window.THREE.MathUtils = window.THREE.Math;
+
+          // Color management can sometimes cause issues with older shaders
+          if (window.THREE.ColorManagement) {
+            window.THREE.ColorManagement.enabled = false;
+          }
+        }
         console.log('GSAP Loaded:', !!window.gsap);
         console.log('THREE Loaded:', !!window.THREE);
         console.log('Shery Loaded:', !!window.Shery);
