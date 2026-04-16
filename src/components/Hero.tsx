@@ -15,24 +15,20 @@ export default function Hero() {
     const initializeShery = () => {
       const Shery = (window as any).Shery;
       const THREE = (window as any).THREE;
-      const gsap = (window as any).gsap;
-      
-      if (!Shery || !THREE || !gsap) {
-        console.log("Waiting for Shery, THREE, and GSAP...");
-        return false;
-      }
+      if (!Shery || !THREE) return false;
 
       try {
-        console.log("Initializing Shery.imageEffect Style 6...");
         // Style 6 with gooey effect
         Shery.imageEffect(".images", {
           style: 6,
+          debug: false,
           gooey: true,
+          mobile: true,
           config: {
             "noiseDetail": { "value": 7.44, "range": [0, 100] },
             "distortionAmount": { "value": 2.98, "range": [0, 10] },
             "scale": { "value": 36.36, "range": [0, 100] },
-            "speed": { "value": 0.79, "range": [0, 1] },
+            "speed": { "value": 1.5, "range": [0, 5] },
             "gooey": { "value": true },
             "infiniteGooey": { "value": true },
             "growSize": { "value": 4, "range": [1, 15] },
@@ -43,20 +39,24 @@ export default function Hero() {
             "maskVal": { "value": 1.2, "range": [1, 5] },
             "scrollType": { "value": 0 },
             "geoVertex": { "range": [1, 64], "value": 1 },
-            "noEffectGooey": { "value": true },
-            "onMouse": { "value": 1 },
-            "noise_speed": { "value": 0.2, "range": [0, 10] },
-            "metaball": { "value": 0.2, "range": [0, 2] },
+            "noEffectGooey": { "value": false },
+            "onMouse": { "value": 0 },
+            "noise_speed": { "value": 0.5, "range": [0, 10] },
+            "metaball": { "value": 0.3, "range": [0, 2] },
             "discard_threshold": { "value": 0.5, "range": [0, 1] },
             "antialias_threshold": { "value": 0.002, "range": [0, 0.1] },
             "shapes": { "value": ["circle", "ellipse"] }
           },
         });
-        console.log("Shery.imageEffect initialized successfully");
+        
+        // Trigger resize to ensure canvas fits mobile screen
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 100);
+
         return true;
       } catch (error) {
-        console.error("Shery.imageEffect initialization error:", error);
-        // Fallback: show images if effect fails
+        console.error("Shery.imageEffect error:", error);
         if (images) {
           images.forEach(img => (img as HTMLElement).style.opacity = "1");
         }
